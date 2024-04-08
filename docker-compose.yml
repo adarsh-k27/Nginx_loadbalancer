@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  node-server-one:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "7001:7000"
+    hostname: server1
+    networks:
+      - node_network
+    container_name: node-server-one
+    
+  node-server-two:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "7002:7000"
+    hostname: server2
+    networks:
+      - node_network
+    container_name: node-server-two
+
+  nginx-service:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "3050:80"
+    depends_on:
+      - node-server-one
+      - node-server-two
+    networks:
+      - node_network
+    container_name: nginx-service 
+
+networks:
+  node_network:
+    name: node_network
